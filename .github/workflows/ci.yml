@@ -35,16 +35,18 @@ jobs:
           # runtime-only, so a list built from `require` alone installs fine and
           # then refuses to run. curl and phar are Composer's.
           #
-          # zlib is THIS package's own runtime requirement, and the only one:
-          # the deflate stream behind the ZIP writer. It is declared in
-          # composer.json, and it is listed here because `extensions: none`
-          # means none. A sibling shipped a workflow whose list was missing an
-          # extension its resolved tree needed, and the install failed before
-          # any check ran.
+          # zlib, zip, simplexml and libxml are THIS package's own runtime
+          # requirements, all four declared in composer.json and all four listed
+          # here because `extensions: none` means none. Three of them were
+          # missing from both places until this narrow list caught them: the
+          # suite had only ever run where every extension happened to be on.
+          #
+          # dom is PHPUnit's, not ours -- our only DOMDocument mention is a
+          # docblock explaining why this package does NOT use it.
           #
           # Kept narrow on purpose so a future dependency on an exotic
           # extension fails HERE rather than in someone's application.
-          extensions: none, ctype, dom, filter, json, libxml, mbstring, tokenizer, xml, xmlwriter, curl, phar, zlib
+          extensions: none, ctype, dom, filter, json, libxml, mbstring, simplexml, tokenizer, xml, xmlwriter, curl, phar, zip, zlib
 
       - name: Validate composer.json
         run: composer validate --strict
@@ -60,7 +62,7 @@ jobs:
       # and catches a dependency drifting out from under the constraints.
       #
       # ⚠️ There is deliberately no `--prefer-lowest` leg, and it is not an
-      # oversight. `require` is `php: ^8.5` and `ext-zlib` and nothing else, so
+      # oversight. `require` is a PHP version and four extensions, so
       # installing the floor of every range would install PHPUnit and prove
       # nothing about this package. A matrix cell that cannot fail for a real
       # reason is worse than a missing one: it reads as coverage.

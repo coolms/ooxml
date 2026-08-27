@@ -19,6 +19,9 @@
     ],
     "require": {
         "php": "^8.5",
+        "ext-libxml": "*",
+        "ext-simplexml": "*",
+        "ext-zip": "*",
         "ext-zlib": "*"
     },
     "require-dev": {
