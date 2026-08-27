@@ -1,0 +1,41 @@
+{
+    "name": "coolms/ooxml",
+    "description": "Writing Open Packaging Conventions containers in pure PHP: a deterministic ZIP writer, OPC parts, content types and relationships, and the escaping OOXML needs. Format-agnostic — it knows nothing about workbooks or documents.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "coolms",
+        "ooxml",
+        "opc",
+        "office",
+        "xlsx",
+        "docx",
+        "zip"
+    ],
+    "authors": [
+        {
+            "name": "Dmitry Popov"
+        }
+    ],
+    "require": {
+        "php": "^8.5",
+        "ext-zlib": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^12.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "CoolMS\\Ooxml\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CoolMS\\Ooxml\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}
