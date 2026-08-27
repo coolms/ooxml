@@ -22,7 +22,7 @@ use ZipArchive;
 #[CoversClass(OpcEditor::class)]
 final class OpcEditorTest extends TestCase
 {
-    private const string FIXTURES = __DIR__ . '/../../../document-engine/tests/fixtures/docx/';
+    private const string FIXTURES = __DIR__ . '/../fixtures/docx/';
 
     /**
      * ⚠️ The whole point: opening and saving with no changes reproduces the

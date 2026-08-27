@@ -26,7 +26,7 @@ use ZipArchive;
 #[CoversClass(OpcReader::class)]
 final class OpcReaderTest extends TestCase
 {
-    private const string FIXTURES = __DIR__ . '/../../../document-engine/tests/fixtures/docx/';
+    private const string FIXTURES = __DIR__ . '/../fixtures/docx/';
 
     private const string WORKSHEET_REL
         = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet';

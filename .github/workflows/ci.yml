@@ -85,8 +85,11 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.5'
+          # No extension list here on purpose: this job only needs to RESOLVE,
+          # and the resolver reads the dev requirements even under --no-dev.
+          # A narrow list made it fail on a missing dom extension, which says
+          # nothing about this package's dependencies.
           coverage: none
-          extensions: none, ctype, filter, json, mbstring, tokenizer, curl, phar, zlib
 
       # Install without dev dependencies and fail if anything lands in vendor/.
       # The README promises a pure-PHP package with no library dependencies, so
