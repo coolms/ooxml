@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+  # Weekly, so a break from a dependency or a PHP point release shows up on a
+  # Monday rather than inside someone's pull request.
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.5']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          # Everything up to xmlwriter is PHPUnit's, from its composer.json plus
+          # what its bootstrap checks at runtime; ctype and tokenizer are
+          # runtime-only, so a list built from `require` alone installs fine and
+          # then refuses to run. curl and phar are Composer's.
+          #
+          # zlib is THIS package's own runtime requirement, and the only one:
+          # the deflate stream behind the ZIP writer. It is declared in
+          # composer.json, and it is listed here because `extensions: none`
+          # means none. A sibling shipped a workflow whose list was missing an
+          # extension its resolved tree needed, and the install failed before
+          # any check ran.
+          #
+          # Kept narrow on purpose so a future dependency on an exotic
+          # extension fails HERE rather than in someone's application.
+          extensions: none, ctype, dom, filter, json, libxml, mbstring, tokenizer, xml, xmlwriter, curl, phar, zlib
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          restore-keys: composer-${{ matrix.php }}-
+
+      # No composer.lock here (it's a library), so this resolves fresh every run
+      # and catches a dependency drifting out from under the constraints.
+      #
+      # ⚠️ There is deliberately no `--prefer-lowest` leg, and it is not an
+      # oversight. `require` is `php: ^8.5` and `ext-zlib` and nothing else, so
+      # installing the floor of every range would install PHPUnit and prove
+      # nothing about this package. A matrix cell that cannot fail for a real
+      # reason is worse than a missing one: it reads as coverage.
+      #
+      # The day this package gains a runtime dependency, the job below goes red,
+      # and whoever fixes that must add the leg here. That job is the tripwire;
+      # this comment is the instruction.
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: Lint sources
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      - name: Run tests
+        run: vendor/bin/phpunit --testdox
+
+  zero-dependency:
+    name: Zero runtime dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          extensions: none, ctype, filter, json, mbstring, tokenizer, curl, phar, zlib
+
+      # Install without dev dependencies and fail if anything lands in vendor/.
+      # The README promises a pure-PHP package with no library dependencies, so
+      # assert it rather than trust it. An extension requirement is not a
+      # package and correctly does not count here.
+      - name: Install runtime dependencies only
+        run: composer update --no-dev --prefer-dist --no-interaction --no-progress
+
+      # Plain text, not --format=json: the JSON form needs an "installed" key,
+      # and if composer ever renames it we would count zero and pass for the
+      # wrong reason. With nothing installed `composer show` prints nothing to
+      # stdout (notices go to stderr), so empty here really means empty.
+      - name: Assert nothing was installed
+        run: |
+          installed=$(composer show --no-dev 2>/dev/null)
+          if [ -n "$installed" ]; then
+            echo "::error::coolms/ooxml claims no runtime package dependencies, but these were installed:"
+            echo "$installed"
+            exit 1
+          fi
+          echo "confirmed: no runtime package dependencies"
