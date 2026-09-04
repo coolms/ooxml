@@ -21,6 +21,12 @@ $package->relate('', self::REL_NS . '/officeDocument', 'xl/workbook.xml');
 file_put_contents('book.xlsx', $package->toBytes());
 ```
 
+## Installation
+
+```bash
+composer require coolms/ooxml
+```
+
 ## What it is for
 
 `.xlsx`, `.docx` and `.pptx` differ only in their parts. The container around
