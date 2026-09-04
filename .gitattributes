@@ -1,0 +1,16 @@
+# Packagist serves a git archive, so anything not export-ignored here is
+# downloaded by every consumer of this package.
+#
+# tests/ is deliberately KEPT. Shipping them is the ecosystem norm and they
+# earn the space: someone debugging an integration reads them, and they
+# document usage better than most READMEs.
+#
+# What goes is the material that only serves this package's own development.
+# None of it can be acted on from the other side of `composer require`:
+# workflows only ever run in this repository, and a phpunit configuration
+# points at dev dependencies a consumer does not install.
+.github/          export-ignore
+phpunit.xml.dist  export-ignore
+phpunit.xml       export-ignore
+package-lock.json export-ignore
+.gitattributes    export-ignore
