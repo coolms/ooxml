@@ -29,7 +29,7 @@ use function strlen;
  * ## Correctness here is binary
  *
  * A wrong CRC or a wrong offset does not degrade a file, it produces one that
- * nothing opens — Word and Excel reject rather than repair. The layout below is
+ * nothing opens -- Word and Excel reject rather than repair. The layout below is
  * APPNOTE 6.3.x: a local header per entry, then a central directory describing
  * every entry, then the end-of-central-directory record pointing at it.
  */
@@ -41,7 +41,7 @@ final class ZipWriter
 
     private const int END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054B50;
 
-    /** 2.0 — the version that introduced deflate, which is all this emits. */
+    /** 2.0 -- the version that introduced deflate, which is all this emits. */
     private const int VERSION_NEEDED = 20;
 
     private const int METHOD_STORED = 0;
@@ -51,7 +51,7 @@ final class ZipWriter
     /**
      * 1980-01-01 00:00, the earliest a DOS timestamp can express.
      *
-     * Fixed rather than "now" ON PURPOSE — see the class note. The encoding is
+     * Fixed rather than "now" ON PURPOSE -- see the class note. The encoding is
      * (year - 1980) << 9 | month << 5 | day for the date, and hours << 11 |
      * minutes << 5 | seconds / 2 for the time.
      */
@@ -72,7 +72,7 @@ final class ZipWriter
      * Add a file, compressing it here.
      *
      * Deflate is skipped when it would make the entry LONGER, which happens
-     * with very short parts — a `.rels` file of a few hundred bytes is common
+     * with very short parts -- a `.rels` file of a few hundred bytes is common
      * in OOXML. A real zip writer does the same, and it keeps the package
      * smaller than the thing it describes.
      */
@@ -98,15 +98,15 @@ final class ZipWriter
     }
 
     /**
-     * Add an entry EXACTLY as it arrived — content, checksum and headers.
+     * Add an entry EXACTLY as it arrived -- content, checksum and headers.
      *
      * The byte-preserving half of an edit. A part nobody touched is copied
      * rather than re-compressed, and its version, flags, timestamp and
      * attributes travel with it, so opening a package and saving it unchanged
      * reproduces the input byte for byte.
      *
-     * ⚠️ The headers matter as much as the bytes. Re-stamping them produces a
-     * file with identical CONTENT and different bytes — which passes every
+     * !! The headers matter as much as the bytes. Re-stamping them produces a
+     * file with identical CONTENT and different bytes -- which passes every
      * "does it still open" check and fails the one assertion that would have
      * caught an entry being silently dropped.
      *

@@ -72,7 +72,7 @@ final class OpcPackage
      * Declare a content type for every part with this extension.
      *
      * Defaults keep `[Content_Types].xml` small where a package holds many
-     * parts of one kind — twenty worksheets do not need twenty overrides.
+     * parts of one kind -- twenty worksheets do not need twenty overrides.
      */
     public function declareDefault(string $extension, string $contentType): void
     {
@@ -107,11 +107,11 @@ final class OpcPackage
     }
 
     /**
-     * Point a part at something OUTSIDE the package — a URL.
+     * Point a part at something OUTSIDE the package -- a URL.
      *
-     * ⚠️ `TargetMode="External"` is what makes the target a destination rather
+     * !! `TargetMode="External"` is what makes the target a destination rather
      * than a part name. Without it a reader looks for a PART called
-     * `https://example.com`, does not find one, and reports a corrupt package —
+     * `https://example.com`, does not find one, and reports a corrupt package --
      * so the failure is not a dead link, it is a document that will not open.
      *
      * The target is written verbatim: it is not a path inside the package and
@@ -237,7 +237,7 @@ final class OpcPackage
 
     /**
      * A relationship target is resolved against the SOURCE's folder, not the
-     * package root — `xl/workbook.xml` reaches a sheet as `worksheets/sheet1.xml`.
+     * package root -- `xl/workbook.xml` reaches a sheet as `worksheets/sheet1.xml`.
      *
      * Only the common case is handled: a target inside the source's own folder,
      * or anywhere when the source is the package root. Anything else would need

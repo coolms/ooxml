@@ -34,7 +34,7 @@ use const PREG_OFFSET_CAPTURE;
  *
  * Rebuilding a package from the parts a reader understood is how a document
  * loses everything the reader did not. This never builds anything: it copies
- * every entry across EXACTLY AS IT ARRIVED — still compressed, same checksum —
+ * every entry across EXACTLY AS IT ARRIVED -- still compressed, same checksum --
  * and re-compresses only what was replaced. A package opened and saved without
  * changes comes back byte-identical, which is the strongest form of "nothing
  * was lost" available.
@@ -46,13 +46,13 @@ use const PREG_OFFSET_CAPTURE;
  * ## Adding a part takes all three steps, or none
  *
  * This used to refuse outright, for a good reason: a part added without a
- * `[Content_Types].xml` declaration and a relationship is invisible to Word — a
+ * `[Content_Types].xml` declaration and a relationship is invisible to Word -- a
  * silent no-op that looks like it worked. It now offers exactly the three verbs
- * {@see OpcPackage} does — {@see declareDefault()}, {@see addPart()},
- * {@see relate()} — so the reason is honoured rather than worked around, and
+ * {@see OpcPackage} does -- {@see declareDefault()}, {@see addPart()},
+ * {@see relate()} -- so the reason is honoured rather than worked around, and
  * the two classes read the same.
  *
- * ⚠️ {@see addPart()} REFUSES a name already in the package. Adding and
+ * !! {@see addPart()} REFUSES a name already in the package. Adding and
  * replacing are different intentions and conflating them is how a fill quietly
  * overwrites an operator's part.
  */
@@ -109,7 +109,7 @@ final class OpcEditor
     /**
      * The main document part, found through the relationship graph.
      *
-     * ⚠️ Never by name. `word/document.xml` is a convention Word happens to
+     * !! Never by name. `word/document.xml` is a convention Word happens to
      * follow; the specification only guarantees one `officeDocument`
      * relationship from the package root. Uses the same
      * {@see Relationships} the reader does, so the two cannot drift.
@@ -215,12 +215,12 @@ final class OpcEditor
     /**
      * Point one part at another, or the package root at a part.
      *
-     * ⚠️ Idempotent BY (type, target). A relationship the source already
+     * !! Idempotent BY (type, target). A relationship the source already
      * declares is not written twice -- its existing id comes back instead --
      * because a second `rId` to the same target is a package Word opens and
      * LibreOffice complains about.
      *
-     * ⚠️ The new id is picked ABOVE every id the part already uses, numeric or
+     * !! The new id is picked ABOVE every id the part already uses, numeric or
      * not. Counting the existing relationships would reuse `rId3` in a package
      * whose ids run 1, 2, 4 -- which is what Word writes after an edit deletes
      * one.
@@ -277,7 +277,7 @@ final class OpcEditor
     /**
      * The package, with the replacements applied and everything else untouched.
      *
-     * ⚠️ Entry ORDER is preserved along with the bytes. It carries no meaning to
+     * !! Entry ORDER is preserved along with the bytes. It carries no meaning to
      * the format, but reproducing the input exactly is a much easier property to
      * test than "equivalent", and a test that can assert equality catches things
      * a looser one waves through.
@@ -296,7 +296,7 @@ final class OpcEditor
             $zip->addRaw($name, $entry);
         }
 
-        // ⚠️ After the originals, so every entry that WAS in the file keeps its
+        // !! After the originals, so every entry that WAS in the file keeps its
         // position as well as its bytes.
         foreach ($this->added as $name => $content) {
             $zip->add($name, $content);
@@ -315,7 +315,7 @@ final class OpcEditor
     }
 
     /**
-     * ⚠️ `Default` elements before `Override` ones.
+     * !! `Default` elements before `Override` ones.
      *
      * The schema sequences them, and a package that interleaves them is one
      * Word reports as corrupt rather than reads leniently.

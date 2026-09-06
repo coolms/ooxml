@@ -22,14 +22,14 @@ use function sprintf;
  *
  * The counterpart to {@see OpcPackage}. Where that one assembles parts and
  * relationships into bytes, this takes bytes apart into parts and follows the
- * relationships between them — which is the only way to find anything in an
+ * relationships between them -- which is the only way to find anything in an
  * OOXML file, because part NAMES are conventions and only the relationship
  * graph is guaranteed.
  *
- * ⚠️ **Never look for `xl/workbook.xml` by name.** Excel writes it there and so
+ * !! **Never look for `xl/workbook.xml` by name.** Excel writes it there and so
  * do we, but the specification does not require it: the package root has one
  * `officeDocument` relationship and its target is the workbook, wherever the
- * producer chose to put it. Files in the wild do differ — this is the single
+ * producer chose to put it. Files in the wild do differ -- this is the single
  * most common way a hand-rolled reader works on its own output and fails on a
  * real spreadsheet.
  */
@@ -69,7 +69,7 @@ final class OpcReader
         return $this->parts[$name];
     }
 
-    /** The part if it is there — many OPC parts are optional. */
+    /** The part if it is there -- many OPC parts are optional. */
     public function partIfPresent(string $name): ?string
     {
         return $this->has($name) ? $this->part($name) : null;
@@ -84,7 +84,7 @@ final class OpcReader
     /**
      * A part parsed as XML.
      *
-     * ⚠️ Internal errors are turned ON and restored: libxml's default is to
+     * !! Internal errors are turned ON and restored: libxml's default is to
      * emit warnings straight to output, which in a web process means XML
      * fragments printed into an API response.
      *
