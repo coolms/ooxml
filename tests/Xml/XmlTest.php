@@ -30,14 +30,14 @@ final class XmlTest extends TestCase
     }
 
     /**
-     * ⚠️ The regression that made every attribute in the package come out
+     * !! The regression that made every attribute in the package come out
      * EMPTY, silently.
      *
      * The strip pattern carried `\x{D800}-\x{DFFF}` for surrogates. Those are
      * not valid Unicode scalar values, so PCRE refuses to compile the pattern
      * in `/u` mode, `preg_replace` returns null, and a `(string)` cast turns
      * that into ''. Ordinary text is the case that proves the pattern compiles
-     * at all — which is why this asserts on a plain word rather than on
+     * at all -- which is why this asserts on a plain word rather than on
      * anything exotic.
      */
     #[Test]
@@ -50,7 +50,7 @@ final class XmlTest extends TestCase
     }
 
     /**
-     * XML 1.0 cannot represent these at all — not as entities, not escaped.
+     * XML 1.0 cannot represent these at all -- not as entities, not escaped.
      * A stray one from a terminal paste makes the whole part unparseable, and
      * the error names a byte offset rather than a cell.
      */

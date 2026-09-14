@@ -88,7 +88,7 @@ final class Relationships
      * A relationship target resolved to a package-absolute part name.
      *
      * Targets are relative to the source part's FOLDER, and a leading `/` means
-     * the package root — both forms appear in files written by Excel.
+     * the package root -- both forms appear in files written by Excel.
      */
     public static function resolve(string $source, string $target): string
     {

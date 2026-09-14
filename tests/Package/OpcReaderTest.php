@@ -20,7 +20,7 @@ use ZipArchive;
  * A reader that only ever sees its own writer's output learns that writer's
  * habits and nothing about the format. So the cases below read an archive
  * written by PHP's own `ZipArchive` as well as one written by
- * {@see \CoolMS\Ooxml\Zip\ZipWriter} — different compression choices, different
+ * {@see \CoolMS\Ooxml\Zip\ZipWriter} -- different compression choices, different
  * extra fields, different everything except the specification.
  */
 #[CoversClass(OpcReader::class)]
@@ -42,7 +42,7 @@ final class OpcReaderTest extends TestCase
     }
 
     /**
-     * ⚠️ The main part is found through the RELATIONSHIP GRAPH, never by name.
+     * !! The main part is found through the RELATIONSHIP GRAPH, never by name.
      * `xl/workbook.xml` is a convention, not a requirement, and looking for it
      * by name is the usual way a reader works on its own output and fails on a
      * real spreadsheet.
@@ -99,7 +99,7 @@ final class OpcReaderTest extends TestCase
      *
      * `ZipArchive` chooses its own compression and writes its own extra fields,
      * including ones whose length differs between the local header and the
-     * central directory — which is exactly where a reader that trusts the
+     * central directory -- which is exactly where a reader that trusts the
      * wrong length starts inflating garbage.
      */
     #[Test]
@@ -167,10 +167,10 @@ final class OpcReaderTest extends TestCase
         $this->expectExceptionMessageMatches('/declares no officeDocument relationship/');
         OpcReader::open($package->toBytes())->mainPart();
     }
-    // ── the shape a spreadsheet APPLICATION writes ───────────────────────
+    // -- the shape a spreadsheet APPLICATION writes -----------------------
 
     /**
-     * ⚠️ LibreOffice writes every entry with a DATA DESCRIPTOR.
+     * !! LibreOffice writes every entry with a DATA DESCRIPTOR.
      *
      * General-purpose bit 3 says the CRC and the two sizes follow the
      * compressed data instead of preceding it, and the local header carries

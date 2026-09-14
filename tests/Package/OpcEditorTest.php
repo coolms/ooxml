@@ -14,8 +14,8 @@ use ZipArchive;
 /**
  * Editing a package without disturbing it.
  *
- * The fixtures are REAL `.docx` files from the document-engine's suite —
- * written by Word, PHPWord and LibreOffice — because the property under test is
+ * The fixtures are REAL `.docx` files from the document-engine's suite --
+ * written by Word, PHPWord and LibreOffice -- because the property under test is
  * "everything I did not touch is exactly as it was", and that is only
  * interesting on packages full of things this code does not understand.
  */
@@ -25,7 +25,7 @@ final class OpcEditorTest extends TestCase
     private const string FIXTURES = __DIR__ . '/../fixtures/docx/';
 
     /**
-     * ⚠️ The whole point: opening and saving with no changes reproduces the
+     * !! The whole point: opening and saving with no changes reproduces the
      * input EXACTLY. A rebuild-from-what-I-understood would pass a "still
      * opens" check and quietly drop the charts.
      */
@@ -105,7 +105,7 @@ final class OpcEditorTest extends TestCase
     }
 
     /**
-     * ⚠️ The whole reason this class used to refuse outright: a part with no
+     * !! The whole reason this class used to refuse outright: a part with no
      * content type is one Office declines to open, so it is refused at the
      * door rather than written and discovered later.
      */
@@ -133,7 +133,7 @@ final class OpcEditorTest extends TestCase
             '<Override PartName="/word/invented.xml" ContentType="application/xml"/>',
             $entries['[Content_Types].xml'],
         );
-        // ⚠️ The target is written RELATIVE to the source part's folder, which
+        // !! The target is written RELATIVE to the source part's folder, which
         // is what Word writes and what every reader resolves against.
         self::assertStringContainsString(
             sprintf('Id="%s" Type="http://example.test/rel/invented" Target="invented.xml"', $id),
@@ -142,7 +142,7 @@ final class OpcEditorTest extends TestCase
     }
 
     /**
-     * ⚠️ `Default` before `Override`. The schema sequences them, and a package
+     * !! `Default` before `Override`. The schema sequences them, and a package
      * that interleaves them is one Word reports as corrupt rather than reads
      * leniently.
      */
@@ -164,7 +164,7 @@ final class OpcEditorTest extends TestCase
     /**
      * Asking twice changes nothing -- the caller does not have to check first.
      *
-     * ⚠️ The second half uses `odttf`, which this fixture ALREADY declares,
+     * !! The second half uses `odttf`, which this fixture ALREADY declares,
      * because the attribute order is Word's: `ContentType` before `Extension`.
      * A check written against our own spelling would find nothing there and
      * declare it a second time.
@@ -187,7 +187,7 @@ final class OpcEditorTest extends TestCase
     }
 
     /**
-     * ⚠️ Idempotent by (type, target). A second `rId` to the same place is a
+     * !! Idempotent by (type, target). A second `rId` to the same place is a
      * package Word opens and LibreOffice complains about, and the caller that
      * relates once per face has no way to know the first one is already there.
      */
@@ -208,7 +208,7 @@ final class OpcEditorTest extends TestCase
     }
 
     /**
-     * ⚠️ ABOVE every id in use, not "one more than how many there are". Word
+     * !! ABOVE every id in use, not "one more than how many there are". Word
      * writes 1, 2, 4 after an edit deletes one, and counting would hand back
      * `rId3` -- an id that collides with nothing today and with the next
      * relationship the same pass adds.
@@ -253,7 +253,7 @@ final class OpcEditorTest extends TestCase
     }
 
     /**
-     * ⚠️ An archive must not CLAIM a data descriptor it does not write.
+     * !! An archive must not CLAIM a data descriptor it does not write.
      *
      * LibreOffice sets general-purpose bit 3 on every entry, which says the CRC
      * and sizes follow the compressed data. This editor re-emits entries with
@@ -333,7 +333,7 @@ final class OpcEditorTest extends TestCase
     }
 
     /**
-     * Read back with PHP's own zip extension rather than ours — a bug shared by
+     * Read back with PHP's own zip extension rather than ours -- a bug shared by
      * our reader and our writer would otherwise cancel out.
      *
      * @return array<string, string>

@@ -38,7 +38,7 @@ final class OpcPackageTest extends TestCase
     }
 
     /**
-     * ⚠️ The reason this writer exists rather than `ZipArchive`: a fixed
+     * !! The reason this writer exists rather than `ZipArchive`: a fixed
      * timestamp, so the same document twice is the same bytes and a test may
      * compare artifacts instead of re-reading them.
      */
@@ -61,7 +61,7 @@ final class OpcPackageTest extends TestCase
 
     /**
      * A relationship target is resolved against the SOURCE's folder, so the
-     * workbook reaches its sheet as `worksheets/sheet1.xml` — an absolute path
+     * workbook reaches its sheet as `worksheets/sheet1.xml` -- an absolute path
      * here opens as an empty workbook rather than as an error.
      */
     #[Test]
@@ -142,7 +142,7 @@ final class OpcPackageTest extends TestCase
         self::assertSame('<a/>', $entries['xl/tiny.xml']);
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────
+    // -- helpers ----------------------------------------------------------
 
     /** The smallest thing shaped like a workbook: root -> workbook -> sheet. */
     private function minimal(): OpcPackage

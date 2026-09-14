@@ -16,8 +16,8 @@ use function str_replace;
  * ## Why not `XMLWriter` or `DOMDocument`
  *
  * Both are available and both are correct. Neither is used for the BODY of a
- * part, because OOXML parts are long, repetitive and written in one pass — a
- * worksheet is rows of the same three elements — and building a DOM to
+ * part, because OOXML parts are long, repetitive and written in one pass -- a
+ * worksheet is rows of the same three elements -- and building a DOM to
  * serialise it once costs memory proportional to the document for no benefit.
  * What is genuinely needed is that no author's text can break the markup, and
  * that is this file.
@@ -29,7 +29,7 @@ use function str_replace;
  * at call sites, because a single missed escape produces a part that fails to
  * parse and takes the whole document with it.
  *
- * ⚠️ XML 1.0 cannot represent most control characters AT ALL — not as entities,
+ * !! XML 1.0 cannot represent most control characters AT ALL -- not as entities,
  * not escaped, not any way. A `\x0B` in a cell (paste from a terminal, a stray
  * vertical tab) makes the file unparseable, and the error names the byte offset
  * rather than the cell. They are dropped, because a document missing one
@@ -64,10 +64,10 @@ final class Xml
      * two non-characters at the end of the BMP. Kept in one place so text and
      * attributes cannot disagree about it.
      *
-     * ⚠️ The surrogate range is NOT in the class, and leaving it out is the
+     * !! The surrogate range is NOT in the class, and leaving it out is the
      * fix rather than an oversight. `\x{D800}-\x{DFFF}` are not valid Unicode
      * scalar values, so PCRE refuses to compile the pattern in `/u` mode at
-     * all — `preg_replace` then returns null, and a `(string)` cast turns that
+     * all -- `preg_replace` then returns null, and a `(string)` cast turns that
      * into an empty string. Every attribute in the package came out blank, and
      * nothing reported an error. Surrogates cannot appear in valid UTF-8
      * anyway, so the class does not need them.

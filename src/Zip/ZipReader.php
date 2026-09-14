@@ -27,15 +27,15 @@ use function unpack;
  * ## It reads the CENTRAL DIRECTORY, not the stream
  *
  * A zip can be read two ways: walk the local headers front to back, or read the
- * directory at the end and jump to each entry. The directory is authoritative —
+ * directory at the end and jump to each entry. The directory is authoritative --
  * it is what every real reader uses, and it is the only one that survives the
  * data-descriptor case, where an entry's local header carries zeroes for the
  * sizes and the real values follow the data. A front-to-back reader meets that
  * and cannot tell where the entry ends.
  *
- * ⚠️ The local header's own name and extra-field lengths must be read to find
+ * !! The local header's own name and extra-field lengths must be read to find
  * where the data starts. They are frequently DIFFERENT from the central
- * directory's for the same entry — the extra field is where a writer puts
+ * directory's for the same entry -- the extra field is where a writer puts
  * timestamps and Unix permissions, and it is not obliged to put the same ones
  * in both places. Trusting the directory's lengths reads from the wrong offset
  * and inflates garbage.
@@ -87,7 +87,7 @@ final class ZipReader
     }
 
     /**
-     * Every entry as it SITS IN THE FILE — still compressed, with its checksum.
+     * Every entry as it SITS IN THE FILE -- still compressed, with its checksum.
      *
      * What this buys is byte preservation. An entry nobody edited can be copied
      * into a new archive exactly as it arrived, so a package opened and saved
@@ -96,7 +96,7 @@ final class ZipReader
      * imported-template path promises the first while being checked on the
      * second.
      *
-     * ⚠️ Unlike {@see read()}, this keeps DIRECTORY entries -- the ones whose
+     * !! Unlike {@see read()}, this keeps DIRECTORY entries -- the ones whose
      * names end in `/`. They carry no content and are not parts, and dropping
      * them still changes the operator's file: Word and LibreOffice both write
      * them, and a save that quietly removes entries is not the "nothing was
@@ -124,7 +124,7 @@ final class ZipReader
             $name = substr($bytes, $at + self::CENTRAL_HEADER_LENGTH, $nameLength);
             $localOffset = self::int32($bytes, $at + 42);
 
-            // ⚠️ The CRC and the two sizes come from HERE, not from the local
+            // !! The CRC and the two sizes come from HERE, not from the local
             // header, and that is not a preference -- it is the only place they
             // are always present. An entry written with a DATA DESCRIPTOR
             // (general-purpose bit 3) carries zeroes in its local header and
@@ -186,13 +186,13 @@ final class ZipReader
     /**
      * One entry as it sits in the file.
      *
-     * ⚠️ The local header is read for everything that describes HOW the bytes
+     * !! The local header is read for everything that describes HOW the bytes
      * are laid out -- the method, the flags, and the two lengths that say where
      * the data starts. The CRC and the sizes are handed in from the CENTRAL
      * directory instead, because an entry written with a data descriptor
      * carries zeroes for all three here. See the caller.
      *
-     * ⚠️ Bit 3 is CLEARED from the flags. The sizes are now known and are
+     * !! Bit 3 is CLEARED from the flags. The sizes are now known and are
      * written into the local header when this entry is re-emitted, so an
      * archive claiming a descriptor that no longer follows the data would be
      * one every reader has to guess about.
@@ -216,7 +216,7 @@ final class ZipReader
         $flags = self::int16($bytes, $offset + 6);
         $time = self::int16($bytes, $offset + 10);
         $date = self::int16($bytes, $offset + 12);
-        // ⚠️ The LOCAL lengths, not the directory's -- see the class note.
+        // !! The LOCAL lengths, not the directory's -- see the class note.
         $nameLength = self::int16($bytes, $offset + 26);
         $extraLength = self::int16($bytes, $offset + 28);
 
@@ -248,7 +248,7 @@ final class ZipReader
      * Where the central directory starts.
      *
      * The end record sits at the very end unless the archive carries a comment,
-     * which may be up to 64KB — so the signature is searched for backwards
+     * which may be up to 64KB -- so the signature is searched for backwards
      * rather than assumed to be at a fixed offset.
      */
     private static function centralDirectoryOffset(string $bytes): int
