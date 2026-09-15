@@ -17,6 +17,10 @@
             "name": "Dmitry Popov"
         }
     ],
+    "support": {
+        "issues": "https://github.com/coolms/ooxml/issues",
+        "source": "https://github.com/coolms/ooxml"
+    },
     "require": {
         "php": "^8.5",
         "ext-libxml": "*",
