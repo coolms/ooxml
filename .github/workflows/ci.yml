@@ -113,3 +113,27 @@ jobs:
             exit 1
           fi
           echo "confirmed: no runtime package dependencies"
+
+  static:
+    name: PHPStan (level 8) and code style
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The versions the platform's own checks run, so a file reads the same here and there.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+          tools: phpstan:2.2.13, php-cs-fixer:3.95.24
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+
+      - name: PHPStan
+        run: phpstan analyse --no-progress --memory-limit=1G
+
+      # A dry run: the check reports the drift and fails; it never rewrites a file.
+      - name: Code style
+        run: php-cs-fixer fix --dry-run --diff
