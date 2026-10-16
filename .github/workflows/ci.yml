@@ -137,3 +137,7 @@ jobs:
       # A dry run: the check reports the drift and fails; it never rewrites a file.
       - name: Code style
         run: php-cs-fixer fix --dry-run --diff
+
+  # README, a LICENSE matching the manifest, and CHANGELOG (coolms/.github's basic-files.yml), pinned to a commit.
+  basic-files:
+    uses: coolms/.github/.github/workflows/basic-files.yml@595d36957a135e7d753abe34ca1ce90a0a6f2215
