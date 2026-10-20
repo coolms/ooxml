@@ -13,6 +13,8 @@ use function simplexml_load_string;
 use function str_starts_with;
 use function substr;
 
+use const LIBXML_NONET;
+
 /**
  * The `.rels` graph, parsed and resolved.
  *
@@ -53,7 +55,7 @@ final class Relationships
         $previous = libxml_use_internal_errors(true);
 
         try {
-            $parsed = simplexml_load_string($xml);
+            $parsed = simplexml_load_string($xml, options: LIBXML_NONET);
         } finally {
             libxml_use_internal_errors($previous);
         }
