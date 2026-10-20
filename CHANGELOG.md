@@ -7,6 +7,11 @@ Versioning is described in `CONTRIBUTING.md` -- read it before assuming what a
 major number means here.
 ## Unreleased
 
+### Security
+
+- `OpcReader::xml()` and `Relationships::parse()` parse with `LIBXML_NONET`: reading a part of
+  an uploaded document never fetches anything over the network, whatever the part declares.
+
 ### Added
 
 - Declares `support` -- `issues` and `source` -- so a page imported from this

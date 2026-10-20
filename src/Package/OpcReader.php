@@ -17,6 +17,8 @@ use function ltrim;
 use function simplexml_load_string;
 use function sprintf;
 
+use const LIBXML_NONET;
+
 /**
  * Reading an Open Packaging Conventions container.
  *
@@ -95,7 +97,7 @@ final class OpcReader
         $previous = libxml_use_internal_errors(true);
 
         try {
-            $parsed = simplexml_load_string($this->part($name));
+            $parsed = simplexml_load_string($this->part($name), options: LIBXML_NONET);
         } finally {
             libxml_use_internal_errors($previous);
         }
