@@ -5,7 +5,7 @@ All notable changes to `coolms/ooxml` are recorded here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning is described in `CONTRIBUTING.md` -- read it before assuming what a
 major number means here.
-## Unreleased
+## 1.0.0-alpha2 - 2026-10-22
 
 ### Security
 
